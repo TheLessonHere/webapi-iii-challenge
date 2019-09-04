@@ -46,7 +46,7 @@ router.get('/', (req, res) => {
     .catch(err => {
         console.log(err);
         res.status(500).json({ error: "Server error getting users" })
-    })
+    });
 });
 
 router.get('/:id', validateUserId, (req, res) => {
@@ -58,7 +58,7 @@ router.get('/:id', validateUserId, (req, res) => {
     .catch(err => {
         console.log(err);
         res.status(500).json({ error: "Server error getting user by id" })
-    })
+    });
 });
 
 router.get('/:id/posts', validateUserId, (req, res) => {
@@ -70,19 +70,19 @@ router.get('/:id/posts', validateUserId, (req, res) => {
     .catch(err => {
         console.log(err);
         res.status(500).json({ error: "Server error getting user's posts" })
-    })
+    });
 });
 
 router.delete('/:id', validateUserId, (req, res) => {
     const { id } = req.params;
     userdb.remove(id)
     .then(response => {
-        res.status(200).json({ message: `User id: ${id} successfully deleted` });      
+        res.status(200).json({ message: `User with id: ${id} successfully deleted` });      
     })
     .catch(err => {
         console.log(err);
         res.status(500).json({ error: "Server error removing user" });
-    })
+    });
 });
 
 router.put('/:id', validateUserId, validateUser, (req, res) => {
@@ -116,8 +116,8 @@ function validateUserId(req, res, next) {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: "Server error finding user by id"})
-        })
+            res.status(500).json({ error: "Server error getting user by id"})
+        });
     } else {
         next();
     }
