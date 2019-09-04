@@ -39,23 +39,66 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+    userdb.get()
+    .then(users => {
+        res.status(200).json(users);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Server error getting users" })
+    })
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', validateUserId, (req, res) => {
+    const { id } = req.params;
+    userdb.getById(id)
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Server error getting user by id" })
+    })
 });
 
-router.get('/:id/posts', (req, res) => {
-
+router.get('/:id/posts', validateUserId, (req, res) => {
+    const { id } = req.params;
+    userdb.getUserPosts(id)
+    .then(posts => {
+        res.status(200).json(posts);
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Server error getting user's posts" })
+    })
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', validateUserId, (req, res) => {
+    const { id } = req.params;
+    userdb.remove(id)
+    .then(response => {
+        res.status(200).json({ message: `User id: ${id} successfully deleted` });      
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Server error removing user" });
+    })
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+    const { id } = req.params;
+    userdb.update(id, req.body)
+    .then(user => {
+        if(user) {
+            res.status(201).json({ message: "User updated successfully" });
+        } else{
+            res.status(500).json({ error: "Server error, no users updated" });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Server error updating user" })
+    });
 });
 
 //custom middleware
